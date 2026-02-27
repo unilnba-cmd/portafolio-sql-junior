@@ -1,21 +1,40 @@
-# Portafolio SQL Junior
+# SQL Portfolio – Nelson Antonio Blandón
 
-Este repositorio contiene proyectos prácticos desarrollados en SQL como parte de mi preparación profesional como Data Analyst / SQL Developer 
+Welcome to my SQL project portfolio.  
+This repository contains hands-on SQL projects designed to demonstrate database design, data modeling, and query development skills.
 
-## Proyecto 1: Creación de Base de Datos 
+---
 
-Archivo: 01_create_database.sql
+## 📁 Project Structure
 
-Este script crea:
--Base de datos escuela_db
--Tabla estudiantes
--Campos con restricciones (NOT NULL, UNIQUE)
+## 📌 Project 01 – Database Creation
 
-## Tecnologías utilizadas 
--SQL
--MySQL
--Git
--GitHub
+### Description
+This project demonstrates the creation of a relational database using SQL.
 
-# Autor
-Nelson Antonio Blandón
+### Key Features
+- Creation of database `escuela_db`
+- Creation of table `estudiantes`
+- Implementation of constraints:
+  - PRIMARY KEY
+  - NOT NULL
+  - UNIQUE
+
+### Skills Demonstrated
+- Database schema design
+- Data integrity enforcement
+- Structured SQL scripting
+
+---
+
+## 🛠 Technologies Used
+- SQL (MySQL)
+- Git
+- GitHub
+
+---
+
+## 👨‍💻 Author
+Nelson Antonio Blandón  
+Aspiring Data Analyst / SQL Developer
+
