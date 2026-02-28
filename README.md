@@ -56,4 +56,4 @@ This repository reflects a structured, hands-on learning path focused on:
 
 ## 🎯 Career Goal
 
-To secure a Junior Data Analyst or SQL Developer role and contribute to data-driven decision-making in a business environment.
+To gain strong technical experience in SQL and data analytics while completing my Computer Engineering degree, and transition into an international remote Data Analyst or BI Analyst role within the next year.
