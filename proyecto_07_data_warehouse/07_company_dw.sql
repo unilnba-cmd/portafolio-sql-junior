@@ -32,6 +32,28 @@ CREATE TABLE dim_date (
     year INT,
     month INT,
     month_name VARCHAR(20)
+
+    -- =============================
+-- INSERT DATA INTO DIMENSIONS
+-- =============================
+
+-- Customers
+INSERT INTO dim_customers (customer_id, customer_name, city) VALUES
+(1, 'Carlos Lopez', 'Managua'),
+(2, 'Maria Perez', 'Leon'),
+(3, 'Juan Martinez', 'Granada');
+
+-- Products
+INSERT INTO dim_products (product_id, product_name, category) VALUES
+(1, 'Laptop', 'Electronics'),
+(2, 'Phone', 'Electronics'),
+(3, 'Desk Chair', 'Furniture');
+
+-- Date Dimension
+INSERT INTO dim_date (date_key, year, month, month_name) VALUES
+('2026-01-01', 2026, 1, 'January'),
+('2026-02-01', 2026, 2, 'February'),
+('2026-03-01', 2026, 3, 'March');
 );
 
 -- =============================
@@ -49,4 +71,28 @@ CREATE TABLE fact_sales (
     FOREIGN KEY (date_key) REFERENCES dim_date(date_key),
     FOREIGN KEY (customer_key) REFERENCES dim_customers(customer_key),
     FOREIGN KEY (product_key) REFERENCES dim_products(product_key)
+
+    -- =============================
+-- INSERT DATA INTO FACT TABLE
+-- =============================
+
+INSERT INTO fact_sales (date_key, customer_key, product_key, quantity, total_amount) VALUES
+('2026-01-01', 1, 1, 2, 2000.00),
+('2026-01-01', 2, 2, 1, 800.00),
+('2026-02-01', 1, 2, 3, 2400.00),
+('2026-02-01', 3, 3, 2, 600.00),
+('2026-03-01', 2, 1, 1, 1000.00);
+
+-- =============================
+-- Monthly Revenue Analysis
+-- =============================
+
+SELECT 
+    d.year,
+    d.month_name,
+    SUM(f.total_amount) AS monthly_revenue
+FROM fact_sales f
+JOIN dim_date d ON f.date_key = d.date_key
+GROUP BY d.year, d.month, d.month_name
+ORDER BY d.year, d.month;
 );
