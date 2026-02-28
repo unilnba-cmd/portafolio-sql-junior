@@ -1,40 +1,59 @@
-# SQL Portfolio – Nelson Antonio Blandón
+# 📊 SQL Portfolio – Nelson Antonio Blandón
 
-Welcome to my SQL project portfolio.  
-This repository contains hands-on SQL projects designed to demonstrate database design, data modeling, and query development skills.
+## 👨‍💻 Professional Summary
 
----
+Aspiring Data Analyst and SQL Developer transitioning into the tech industry through structured, project-based learning.
 
-## 📁 Project Structure
-
-## 📌 Project 01 – Database Creation
-
-### Description
-This project demonstrates the creation of a relational database using SQL.
-
-### Key Features
-- Creation of database `escuela_db`
-- Creation of table `estudiantes`
-- Implementation of constraints:
-  - PRIMARY KEY
-  - NOT NULL
-  - UNIQUE
-
-### Skills Demonstrated
-- Database schema design
-- Data integrity enforcement
-- Structured SQL scripting
+This portfolio demonstrates progressive development in database design, relational modeling, business analysis, KPI reporting, and advanced SQL techniques.
 
 ---
 
-## 🛠 Technologies Used
+## 🛠 Technical Skills
+
 - SQL (MySQL)
-- Git
-- GitHub
+- Relational Database Design
+- Data Modeling
+- Data Aggregation & KPI Analysis
+- Subqueries & CTEs
+- Window Functions
+- Git & GitHub Version Control
 
 ---
 
-## 👨‍💻 Author
-Nelson Antonio Blandón  
-Aspiring Data Analyst / SQL Developer
+## 📁 Project Overview
 
+### 🔹 Project 01 – Database Foundations
+Created initial database schema and implemented data integrity constraints.
+
+### 🔹 Project 02 – Basic Queries & Aggregation
+Practiced filtering, sorting, and aggregation queries.
+
+### 🔹 Project 03 – Relational Modeling & JOINs
+Designed relational tables and implemented foreign keys.
+
+### 🔹 Project 04 – Sales Business Case
+Built a simulated business database with customers, products, and orders.
+
+### 🔹 Project 05 – KPI & Executive Insights
+Generated revenue metrics, segmentation analysis, and executive-level insights.
+
+### 🔹 Project 06 – Advanced SQL
+Implemented subqueries, Common Table Expressions (CTEs), and window functions.
+
+---
+
+## 📘 Learning Approach
+
+This repository reflects a structured, hands-on learning path focused on:
+
+- Practical implementation
+- Business-oriented thinking
+- Progressive complexity
+- Clean repository structure
+- Continuous documentation (see Learning Journal)
+
+---
+
+## 🎯 Career Goal
+
+To secure a Junior Data Analyst or SQL Developer role and contribute to data-driven decision-making in a business environment.
