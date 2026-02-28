@@ -71,3 +71,31 @@ JOIN customers c ON o.customer_id = c.id
 JOIN products p ON o.product_id = p.id
 GROUP BY c.name
 ORDER BY total_spent DESC;
+
+-- 7️⃣ Simulated Call Center KPI Metrics
+
+-- Average Revenue per Customer (similar to performance metric)
+SELECT 
+    AVG(total_spent) AS avg_customer_value
+FROM (
+    SELECT 
+        c.id,
+        SUM(p.price * o.quantity) AS total_spent
+    FROM orders o
+    JOIN customers c ON o.customer_id = c.id
+    JOIN products p ON o.product_id = p.id
+    GROUP BY c.id
+) AS customer_values;
+
+-- High Value Customers Count
+SELECT COUNT(*) AS high_value_customers
+FROM (
+    SELECT 
+        c.id,
+        SUM(p.price * o.quantity) AS total_spent
+    FROM orders o
+    JOIN customers c ON o.customer_id = c.id
+    JOIN products p ON o.product_id = p.id
+    GROUP BY c.id
+    HAVING total_spent >= 2000
+) AS high_value_segment;
