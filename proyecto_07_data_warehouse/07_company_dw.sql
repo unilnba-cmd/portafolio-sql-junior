@@ -152,4 +152,37 @@ SELECT
 FROM fact_sales f
 JOIN dim_customers c ON f.customer_key = c.customer_key
 GROUP BY c.customer_name;
+
+-- =========================================
+-- Executive Summary - Q1 2026
+-- =========================================
+
+WITH monthly_revenue AS (
+    SELECT 
+        d.year,
+        d.month,
+        d.month_name,
+        SUM(f.total_amount) AS revenue
+    FROM fact_sales f
+    JOIN dim_date d ON f.date_key = d.date_key
+    GROUP BY d.year, d.month, d.month_name
+)
+SELECT 
+    SUM(revenue) AS total_q1_revenue,
+    ROUND(AVG(revenue), 2) AS average_monthly_revenue,
+    MAX(revenue) AS best_month_revenue,
+    MIN(revenue) AS worst_month_revenue
+FROM monthly_revenue;
+
+-- =========================================
+-- Top Product Q1
+-- =========================================
+
+SELECT 
+    p.product_name,
+    SUM(f.total_amount) AS total_revenue,
+    RANK() OVER (ORDER BY SUM(f.total_amount) DESC) AS revenue_rank
+FROM fact_sales f
+JOIN dim_products p ON f.product_key = p.product_key
+GROUP BY p.product_name;
 );
