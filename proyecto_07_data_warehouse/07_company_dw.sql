@@ -185,4 +185,36 @@ SELECT
 FROM fact_sales f
 JOIN dim_products p ON f.product_key = p.product_key
 GROUP BY p.product_name;
+
+-- =========================================
+-- Customer Revenue Change Month-over-Month
+-- =========================================
+
+WITH customer_monthly AS (
+    SELECT 
+        c.customer_name,
+        d.year,
+        d.month,
+        SUM(f.total_amount) AS revenue
+    FROM fact_sales f
+    JOIN dim_customers c ON f.customer_key = c.customer_key
+    JOIN dim_date d ON f.date_key = d.date_key
+    GROUP BY c.customer_name, d.year, d.month
+)
+
+SELECT 
+    customer_name,
+    year,
+    month,
+    revenue,
+    LAG(revenue) OVER (
+        PARTITION BY customer_name 
+        ORDER BY year, month
+    ) AS previous_revenue,
+    revenue - LAG(revenue) OVER (
+        PARTITION BY customer_name 
+        ORDER BY year, month
+    ) AS revenue_change
+FROM customer_monthly
+ORDER BY customer_name, year, month;
 );

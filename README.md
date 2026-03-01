@@ -57,3 +57,9 @@ This repository reflects a structured, hands-on learning path focused on:
 ## 🎯 Career Goal
 
 To gain strong technical experience in SQL and data analytics while completing my Computer Engineering degree, and transition into an international remote Data Analyst or BI Analyst role within the next year.
+
+Executive Summary – Q1 2026
+
+During Q1 2026, total revenue reached $X.
+The highest-performing month was February, showing growth compared to January.
+The top-performing product was Laptop, generating the highest revenue contribution.
