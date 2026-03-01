@@ -95,4 +95,61 @@ FROM fact_sales f
 JOIN dim_date d ON f.date_key = d.date_key
 GROUP BY d.year, d.month, d.month_name
 ORDER BY d.year, d.month;
+
+-- =========================================
+-- Running Total Revenue
+-- =========================================
+
+SELECT 
+    d.year,
+    d.month,
+    d.month_name,
+    SUM(f.total_amount) AS monthly_revenue,
+    SUM(SUM(f.total_amount)) OVER (
+        ORDER BY d.year, d.month
+    ) AS running_total_revenue
+FROM fact_sales f
+JOIN dim_date d ON f.date_key = d.date_key
+GROUP BY d.year, d.month, d.month_name
+ORDER BY d.year, d.month;
+
+-- =========================================
+-- Month-over-Month Growth
+-- =========================================
+
+WITH monthly_revenue AS (
+    SELECT 
+        d.year,
+        d.month,
+        d.month_name,
+        SUM(f.total_amount) AS revenue
+    FROM fact_sales f
+    JOIN dim_date d ON f.date_key = d.date_key
+    GROUP BY d.year, d.month, d.month_name
+)
+
+SELECT 
+    year,
+    month,
+    month_name,
+    revenue,
+    LAG(revenue) OVER (ORDER BY year, month) AS previous_month_revenue,
+    ROUND(
+        (revenue - LAG(revenue) OVER (ORDER BY year, month)) 
+        / LAG(revenue) OVER (ORDER BY year, month) * 100, 
+        2
+    ) AS growth_percentage
+FROM monthly_revenue;
+
+-- =========================================
+-- Customer Revenue Ranking
+-- =========================================
+
+SELECT 
+    c.customer_name,
+    SUM(f.total_amount) AS total_revenue,
+    RANK() OVER (ORDER BY SUM(f.total_amount) DESC) AS revenue_rank
+FROM fact_sales f
+JOIN dim_customers c ON f.customer_key = c.customer_key
+GROUP BY c.customer_name;
 );
