@@ -263,4 +263,26 @@ WITH customer_months AS (
 
 SELECT *
 FROM customer_months;
+
+-- ============================================
+-- CUSTOMER CHURN ANALYSIS (90-Day Rule)
+-- ============================================
+
+WITH last_purchase AS (
+    SELECT
+        customer_id,
+        MAX(sale_date) AS last_purchase_date
+    FROM fact_sales
+    GROUP BY customer_id
+)
+
+SELECT
+    customer_id,
+    last_purchase_date,
+    DATEDIFF(CURDATE(), last_purchase_date) AS days_inactive,
+    CASE
+        WHEN DATEDIFF(CURDATE(), last_purchase_date) >= 90 THEN 'CHURNED'
+        ELSE 'ACTIVE'
+    END AS customer_status
+FROM last_purchase;
 );
