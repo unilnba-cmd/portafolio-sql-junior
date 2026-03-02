@@ -217,4 +217,28 @@ SELECT
     ) AS revenue_change
 FROM customer_monthly
 ORDER BY customer_name, year, month;
+
+ -- =========================================
+-- Customer Segmentation by Revenue Tier
+-- =========================================
+
+WITH customer_totals AS (
+    SELECT 
+        c.customer_name,
+        SUM(f.total_amount) AS total_revenue
+    FROM fact_sales f
+    JOIN dim_customers c ON f.customer_key = c.customer_key
+    GROUP BY c.customer_name
+)
+
+SELECT 
+    customer_name,
+    total_revenue,
+    CASE 
+        WHEN total_revenue >= 3000 THEN 'High Value'
+        WHEN total_revenue >= 1500 THEN 'Medium Value'
+        ELSE 'Low Value'
+    END AS customer_segment
+FROM customer_totals
+ORDER BY total_revenue DESC;
 );
