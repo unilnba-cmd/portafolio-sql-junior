@@ -241,4 +241,26 @@ SELECT
     END AS customer_segment
 FROM customer_totals
 ORDER BY total_revenue DESC;
+
+-- ============================================
+-- CUSTOMER RETENTION ANALYSIS
+-- ============================================
+
+SELECT
+    DATE_FORMAT(sale_date, '%Y-%m') AS month,
+    COUNT(DISTINCT customer_id) AS active_customers
+FROM fact_sales
+GROUP BY month
+ORDER BY month;
+
+WITH customer_months AS (
+    SELECT
+        customer_id,
+        DATE_FORMAT(sale_date, '%Y-%m') AS month
+    FROM fact_sales
+    GROUP BY customer_id, month
+)
+
+SELECT *
+FROM customer_months;
 );
