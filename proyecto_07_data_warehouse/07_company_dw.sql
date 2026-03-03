@@ -315,4 +315,46 @@ SELECT
     ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM customer_status), 2) AS percentage
 FROM customer_status
 GROUP BY status;
+
+-- ============================================
+-- REVENUE CONTRIBUTION BY CUSTOMER STATUS
+-- ============================================
+
+WITH last_purchase AS (
+    SELECT
+        customer_id,
+        MAX(sale_date) AS last_purchase_date
+    FROM fact_sales
+    GROUP BY customer_id
+),
+
+customer_status AS (
+    SELECT
+        lp.customer_id,
+        CASE
+            WHEN DATEDIFF(CURDATE(), last_purchase_date) >= 90 THEN 'CHURNED'
+            WHEN DATEDIFF(CURDATE(), last_purchase_date) >= 45 THEN 'AT RISK'
+            ELSE 'ACTIVE'
+        END AS status
+    FROM last_purchase lp
+),
+
+customer_revenue AS (
+    SELECT
+        customer_id,
+        SUM(amount) AS total_revenue
+    FROM fact_sales
+    GROUP BY customer_id
+)
+
+SELECT
+    cs.status,
+    COUNT(DISTINCT cs.customer_id) AS total_customers,
+    SUM(cr.total_revenue) AS total_revenue,
+    ROUND(SUM(cr.total_revenue) * 100.0 /
+          (SELECT SUM(amount) FROM fact_sales), 2) AS revenue_percentage
+FROM customer_status cs
+JOIN customer_revenue cr
+    ON cs.customer_id = cr.customer_id
+GROUP BY cs.status;
 );
