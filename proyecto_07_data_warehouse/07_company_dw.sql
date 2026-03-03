@@ -461,4 +461,82 @@ SELECT
         ELSE 'NORMAL'
     END AS risk_status
 FROM decline_flag;
+
+-- ============================================
+-- HYBRID CUSTOMER RISK MODEL
+-- ============================================
+
+WITH last_purchase AS (
+    SELECT
+        customer_id,
+        MAX(sale_date) AS last_purchase_date
+    FROM fact_sales
+    GROUP BY customer_id
+),
+
+monthly_revenue AS (
+    SELECT
+        customer_id,
+        DATE_FORMAT(sale_date, '%Y-%m') AS month,
+        SUM(amount) AS total_revenue
+    FROM fact_sales
+    GROUP BY customer_id, month
+),
+
+revenue_trend AS (
+    SELECT
+        customer_id,
+        month,
+        total_revenue,
+        LAG(total_revenue) OVER (
+            PARTITION BY customer_id
+            ORDER BY month
+        ) AS previous_month_revenue
+    FROM monthly_revenue
+),
+
+percent_change_calc AS (
+    SELECT
+        customer_id,
+        month,
+        ROUND(
+            (total_revenue - previous_month_revenue)
+            / previous_month_revenue * 100,
+            2
+        ) AS percent_change
+    FROM revenue_trend
+    WHERE previous_month_revenue IS NOT NULL
+),
+
+two_month_decline AS (
+    SELECT
+        customer_id,
+        MAX(
+            CASE
+                WHEN percent_change <= -30
+                     AND LAG(percent_change) OVER (
+                         PARTITION BY customer_id
+                         ORDER BY month
+                     ) <= -30
+                THEN 1
+                ELSE 0
+            END
+        ) AS consecutive_decline_flag
+    FROM percent_change_calc
+    GROUP BY customer_id
+)
+
+SELECT
+    lp.customer_id,
+    DATEDIFF(CURDATE(), lp.last_purchase_date) AS days_inactive,
+    COALESCE(tmd.consecutive_decline_flag, 0) AS decline_flag,
+    CASE
+        WHEN DATEDIFF(CURDATE(), lp.last_purchase_date) >= 90 THEN 'CHURNED'
+        WHEN DATEDIFF(CURDATE(), lp.last_purchase_date) >= 45 THEN 'AT RISK'
+        WHEN COALESCE(tmd.consecutive_decline_flag, 0) = 1 THEN 'AT RISK'
+        ELSE 'ACTIVE'
+    END AS final_risk_status
+FROM last_purchase lp
+LEFT JOIN two_month_decline tmd
+    ON lp.customer_id = tmd.customer_id;
 );
