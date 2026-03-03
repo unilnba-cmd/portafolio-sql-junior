@@ -285,4 +285,34 @@ SELECT
         ELSE 'ACTIVE'
     END AS customer_status
 FROM last_purchase;
+
+-- ============================================
+-- CUSTOMER STATUS KPI DISTRIBUTION
+-- ============================================
+
+WITH last_purchase AS (
+    SELECT
+        customer_id,
+        MAX(sale_date) AS last_purchase_date
+    FROM fact_sales
+    GROUP BY customer_id
+),
+
+customer_status AS (
+    SELECT
+        customer_id,
+        CASE
+            WHEN DATEDIFF(CURDATE(), last_purchase_date) >= 90 THEN 'CHURNED'
+            WHEN DATEDIFF(CURDATE(), last_purchase_date) >= 45 THEN 'AT RISK'
+            ELSE 'ACTIVE'
+        END AS status
+    FROM last_purchase
+)
+
+SELECT
+    status,
+    COUNT(*) AS total_customers,
+    ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM customer_status), 2) AS percentage
+FROM customer_status
+GROUP BY status;
 );
