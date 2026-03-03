@@ -357,4 +357,108 @@ FROM customer_status cs
 JOIN customer_revenue cr
     ON cs.customer_id = cr.customer_id
 GROUP BY cs.status;
+
+WITH monthly_revenue AS (
+    SELECT
+        customer_id,
+        DATE_FORMAT(sale_date, '%Y-%m') AS month,
+        SUM(amount) AS total_revenue
+    FROM fact_sales
+    GROUP BY customer_id, month
+)
+
+, revenue_trend AS (
+    SELECT
+        customer_id,
+        month,
+        total_revenue,
+        LAG(total_revenue) OVER (
+            PARTITION BY customer_id
+            ORDER BY month
+        ) AS previous_month_revenue
+    FROM monthly_revenue
+)
+
+SELECT
+    customer_id,
+    month,
+    total_revenue,
+    previous_month_revenue,
+    ROUND(
+        (total_revenue - previous_month_revenue)
+        / previous_month_revenue * 100,
+        2
+    ) AS percent_change
+FROM revenue_trend;
+
+-- ============================================
+-- DETECT TWO CONSECUTIVE -30% DECLINE
+-- ============================================
+
+WITH monthly_revenue AS (
+    SELECT
+        customer_id,
+        DATE_FORMAT(sale_date, '%Y-%m') AS month,
+        SUM(amount) AS total_revenue
+    FROM fact_sales
+    GROUP BY customer_id, month
+),
+
+revenue_trend AS (
+    SELECT
+        customer_id,
+        month,
+        total_revenue,
+        LAG(total_revenue) OVER (
+            PARTITION BY customer_id
+            ORDER BY month
+        ) AS previous_month_revenue
+    FROM monthly_revenue
+),
+
+percent_change_calc AS (
+    SELECT
+        customer_id,
+        month,
+        total_revenue,
+        previous_month_revenue,
+        ROUND(
+            (total_revenue - previous_month_revenue)
+            / previous_month_revenue * 100,
+            2
+        ) AS percent_change
+    FROM revenue_trend
+),
+
+decline_flag AS (
+    SELECT
+        customer_id,
+        month,
+        percent_change,
+        CASE
+            WHEN percent_change <= -30 THEN 1
+            ELSE 0
+        END AS decline_30_flag
+    FROM percent_change_calc
+)
+
+SELECT
+    customer_id,
+    month,
+    percent_change,
+    decline_30_flag,
+    LAG(decline_30_flag) OVER (
+        PARTITION BY customer_id
+        ORDER BY month
+    ) AS previous_decline_flag,
+    CASE
+        WHEN decline_30_flag = 1
+             AND LAG(decline_30_flag) OVER (
+                 PARTITION BY customer_id
+                 ORDER BY month
+             ) = 1
+        THEN 'AT RISK'
+        ELSE 'NORMAL'
+    END AS risk_status
+FROM decline_flag;
 );
