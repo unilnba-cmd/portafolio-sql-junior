@@ -22,6 +22,23 @@ This portfolio demonstrates progressive development in database design, relation
 
 ## 📁 Project Overview
 
+## 📊 Business Insights
+
+This section demonstrates SQL analysis applied to real business questions.
+
+### Revenue by Product
+Identifies which products generate the highest revenue.
+
+Key finding:
+Laptop generates the highest revenue contribution in the dataset.
+
+### Business Questions Solved
+- Revenue by product
+- Revenue by category
+- Top customers by revenue
+- Monthly sales trend
+- Business growth analysis
+
 ### 🔹 Project 01 – Database Foundations
 Created initial database schema and implemented data integrity constraints.
 
