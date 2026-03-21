@@ -1,3 +1,6 @@
+-- Revenue Analysis by Date
+-- Calculates daily revenue metrics including total sales, average ticket, and extremes
+
 SELECT 
     DATE(v.fecha) AS fecha,
 
