@@ -1,3 +1,58 @@
+# 🧮 Computational Geometry in C: Polygon Triangulation
+
+## 📌 Overview
+Interactive computational geometry project developed in C using Raylib, focused on polygon triangulation and dynamic geometric visualization.
+
+---
+
+## 🚀 Features
+- Dynamic polygon generation
+- Polygon triangulation
+- 3-coloring algorithm
+- Interactive visual simulation
+
+---
+
+## 🎮 Controls
+- Left click → Add points  
+- Right click → Remove points  
+- Press `C` → Clear screen  
+
+---
+
+## 🧠 Key Concepts
+- Computational geometry
+- Polygon decomposition
+- Graph coloring (3-color theorem)
+- Algorithmic optimization in C
+
+---
+
+## 📂 Files
+- `ejercicio1_full.c` → Core geometry logic
+- `ejercicio2_full.c` → Extended computations
+- `ejercicio3_full.c` → Advanced operations
+
+---
+
+## 🎥 Demo
+Demo removed due to file size (available upon request)
+
+---
+
+## ⚙️ How to Run
+
+```bash
+gcc ejercicio1_full.c -o run
+./run
+
+```md
+> ⚡ Interactive geometry engine built in C with real-time visualization
+
+💻## ⚠️ Requirements
+This project requires the Raylib library for execution.  
+If the dependencies are not installed, you can refer to the demo video to see the project in action.
+
 # 🧠 Geometría Computacional - Triangulación PRO
 
 ## 📌 Descripción
